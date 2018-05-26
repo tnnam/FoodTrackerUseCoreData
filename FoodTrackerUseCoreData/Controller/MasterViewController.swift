@@ -14,6 +14,7 @@ class MasterViewController: UITableViewController {
     var fetchedResultsController = DataService.shared.fetchedResultsController
     let searchController = UISearchController(searchResultsController: nil)
     var filterMeals : [MealEntity] = []
+    var predicate: NSPredicate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,10 +40,6 @@ class MasterViewController: UITableViewController {
         return searchController.searchBar.text?.isEmpty ?? true
     }
     
-    func isFiltering() -> Bool {
-        return searchController.isActive && !searchBarIsEmpty()
-    }
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return fetchedResultsController.sections?.count ?? 0
@@ -59,7 +56,7 @@ class MasterViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MealTableViewCell
         let meal: MealEntity
-        if isFiltering() {
+        if !searchBarIsEmpty() {
             meal = filterMeals[indexPath.row]
         } else {
             meal = fetchedResultsController.object(at: indexPath)
@@ -106,7 +103,8 @@ class MasterViewController: UITableViewController {
     */
 
     @IBAction func unwind(for unwindSegue: UIStoryboardSegue) {
-        tableView.reloadData()
+        fetchedResultsController.fetchRequest.predicate = nil
+//        tableView.reloadData()
         //
     }
     // MARK: - Navigation
@@ -116,12 +114,20 @@ class MasterViewController: UITableViewController {
         guard let mealViewController = segue.destination as? MealViewController else { return }
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         let meal: MealEntity
-        if isFiltering() {
+        if !searchBarIsEmpty() {
             meal = filterMeals[indexPath.row]
         } else {
             meal = fetchedResultsController.object(at: indexPath)
         }
-        mealViewController.meal = meal
+        predicate = NSPredicate(format: "name == %@", meal.name!)
+        fetchedResultsController.fetchRequest.predicate = predicate
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print(error)
+        }
+        
+        mealViewController.meal = fetchedResultsController.fetchedObjects?.first
         searchController.isActive = false
     }
 
@@ -162,6 +168,4 @@ extension MasterViewController: UISearchResultsUpdating {
         })
         tableView.reloadData()
     }
-    
-    
 }

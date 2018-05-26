@@ -63,6 +63,18 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
             meal?.photo = photoImageView.image
             meal?.rating = Int32(ratingControl.rating)
             DataService.shared.saveDataToCoreData()
+//            if masterViewController.predicate == nil {
+//                meal = MealEntity(context: masterViewController.fetchedResultsController.managedObjectContext)
+//                meal?.name = nameTextField.text
+//                meal?.photo = photoImageView.image
+//                meal?.rating = Int32(ratingControl.rating)
+//            } else {
+//                let meal = Meal(name: nameTextField.text!, photo: photoImageView.image, rating: ratingControl.rating)
+//                masterViewController.predicate?.setValue(nameTextField.text, forKey: "name")
+//                masterViewController.predicate?.setValue(photoImageView.image, forKey: "photo")
+//                masterViewController.predicate?.setValue(ratingControl.rating, forKey: "rating")
+//            }
+            DataService.shared.saveDataToCoreData()
         }
     }
     

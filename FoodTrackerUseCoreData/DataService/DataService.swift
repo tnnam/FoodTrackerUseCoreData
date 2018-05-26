@@ -22,7 +22,7 @@ class DataService {
         let fetchedRequest: NSFetchRequest<MealEntity> = MealEntity.fetchRequest()
         
         fetchedRequest.fetchBatchSize = 20
-        
+        fetchedRequest.predicate = nil
         let nameMeal = NSSortDescriptor(key: "name", ascending: true)
         fetchedRequest.sortDescriptors = [nameMeal]
         
@@ -33,6 +33,7 @@ class DataService {
             if let objects = _fetchedResultsController?.fetchedObjects {
                 if objects.count == 0 {
                     loadSampleMeals()
+                    try _fetchedResultsController?.performFetch()
                 }
             }
         } catch let error as NSError {
@@ -69,6 +70,7 @@ class DataService {
         createNewMeal(name: "Caprese Salad", photoName: "meal1", rating: 4)
         createNewMeal(name: "Chicken and Potatoes", photoName: "meal2", rating: 5)
         createNewMeal(name: "Pasta with Meatballs", photoName: "meal3", rating: 3)
+        saveDataToCoreData()
     }
     
 }

@@ -8,17 +8,12 @@
 
 import UIKit
 
-class Meal: Equatable {
-    
-    static func == (lhs: Meal, rhs: Meal) -> Bool {
-        return lhs.name == rhs.name
-    }
-    
+class Meal {
     var name: String
     var photo: UIImage?
     var rating: Int
     
-    init(name:String, photo: UIImage?, rating: Int) {
+    init(name: String, photo: UIImage?, rating: Int) {
         self.name = name
         self.photo = photo
         self.rating = rating
