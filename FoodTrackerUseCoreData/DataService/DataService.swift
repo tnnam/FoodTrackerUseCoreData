@@ -22,7 +22,6 @@ class DataService {
         let fetchedRequest: NSFetchRequest<MealEntity> = MealEntity.fetchRequest()
         
         fetchedRequest.fetchBatchSize = 20
-        fetchedRequest.predicate = nil
         let nameMeal = NSSortDescriptor(key: "name", ascending: true)
         fetchedRequest.sortDescriptors = [nameMeal]
         

@@ -56,24 +56,13 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let masterViewController = segue.destination as? MasterViewController {
-            if masterViewController.tableView.indexPathForSelectedRow == nil {
+            print(masterViewController.tableView.indexPathForSelectedRow == nil)
+            if masterViewController.tableView.indexPathForSelectedRow == nil && meal == nil {
                 meal = MealEntity(context: masterViewController.fetchedResultsController.managedObjectContext)
             }
             meal?.name = nameTextField.text
             meal?.photo = photoImageView.image
             meal?.rating = Int32(ratingControl.rating)
-            DataService.shared.saveDataToCoreData()
-//            if masterViewController.predicate == nil {
-//                meal = MealEntity(context: masterViewController.fetchedResultsController.managedObjectContext)
-//                meal?.name = nameTextField.text
-//                meal?.photo = photoImageView.image
-//                meal?.rating = Int32(ratingControl.rating)
-//            } else {
-//                let meal = Meal(name: nameTextField.text!, photo: photoImageView.image, rating: ratingControl.rating)
-//                masterViewController.predicate?.setValue(nameTextField.text, forKey: "name")
-//                masterViewController.predicate?.setValue(photoImageView.image, forKey: "photo")
-//                masterViewController.predicate?.setValue(ratingControl.rating, forKey: "rating")
-//            }
             DataService.shared.saveDataToCoreData()
         }
     }
@@ -111,8 +100,7 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
     }
 
     private func updateSaveButtonStates() {
-        let text = nameTextField.text ?? ""
-        saveButton.isEnabled = !text.isEmpty
+        saveButton.isEnabled = nameTextField.text! != ""
     }
 }
 
